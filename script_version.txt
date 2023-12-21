@@ -1,0 +1,707 @@
+var originalPrice = 100;
+var currentQuantities = {};
+var removedItemData = [];
+
+var rows = document.querySelectorAll(".row");
+
+var productsContainer = document.getElementById("products-container");
+var restoreProducts = document.getElementById("restoreProducts");
+
+rows.forEach(function (row, index) {
+  var moreButton = row.querySelector("#moreButton");
+  var lessButton = row.querySelector("#lessButton");
+  var removeCard = row.querySelector("#removeCard");
+
+  currentQuantities[index] = 1;
+
+  removeCard.addEventListener("click", function () {
+    row.remove();
+    checkAllRemoved();
+  });
+
+  moreButton.addEventListener("click", function () {
+    incrementFunction(index);
+  });
+
+  lessButton.addEventListener("click", function () {
+    decrementFunction(index);
+  });
+
+  function incrementFunction(rowIndex) {
+    currentQuantities[rowIndex]++;
+    updateDisplay(row);
+  }
+
+  function decrementFunction(rowIndex) {
+    if (currentQuantities[rowIndex] > 1) {
+      currentQuantities[rowIndex]--;
+      updateDisplay(row);
+    }
+  }
+
+  function updateDisplay(row) {
+    var priceElement = row.querySelector("#productPrice");
+    var quantityElement = row.querySelector("#quantity");
+
+    var formattedPrice = (
+      originalPrice * currentQuantities[index]
+    ).toLocaleString("pt-Br", {
+      style: "currency",
+      currency: "BRL",
+    });
+
+    priceElement.innerText = formattedPrice;
+    quantityElement.innerText = "Quantidade: " + currentQuantities[index];
+
+    checkAllRemoved();
+  }
+});
+
+function checkAllRemoved() {
+  var allRowsRemoved = Array.from(rows).every(function (row) {
+    return !document.body.contains(row);
+  });
+
+  var restoreProducts = document.getElementById(
+    "restoreProducts"
+  );
+  restoreProducts.style.display = allRowsRemoved ? "block" : "none";
+}
+
+<!DOCTYPE html>
+<html lang="pt-Br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+
+    <title>Shopping Cart Page</title>
+    
+</head>
+
+js:
+
+let iconCart = document.querySelector('.icon-cart');
+let closeCart = document.querySelector('.close');
+let body = document.querySelector('body');
+let listProductsHTMl = document.querySelector('.listProducts');
+
+let listProducts = [];
+
+iconCart.addEventListener('click', () => {
+    body.classList.toggle('showCart');
+});
+
+closeCart.addEventListener('click', () => {
+    body.classList.toggle('showCart');
+});
+
+const addToHTML = () => {
+    listProductsHTMl.innerHTML = '';
+    if (listProducts.length > 0) {
+        listProducts.forEach(product => {
+            let newProduct = document.createElement('div');
+            newProduct.classList.add('item');
+            newProduct.dataset.id = product.id;
+            newProduct.innerHTML = `<div class="product">
+            <div class="local-image" id="image-short-1"></div>
+            <div class="line-height">
+              <div class="info-prod">
+                <h1>${product.name}</h1>
+                <p id="productPrice">Preço: ${product.price} reais</p>
+                <span id="quantity">Quantidade: 1</span>
+              </div>
+              <div class="less-more">
+                <button id="moreButton">Mais</button>
+                <button id="lessButton">Menos</button>
+              </div>
+            </div>
+            <div class="buy-or-add">
+              <button type="submit" class="addCart">Adicionar ao carrinho</button>
+            </div>
+          </div>`;
+            listProductsHTMl.appendChild(newProduct);
+        })
+    }
+}
+listProductsHTMl.addEventListener('click', (event) => {
+    let positionClick = event.target;
+    if (positionClick.classList.contains('addCart')) {
+        let product_id = positionClick.parentElement.dataset.id;
+        alert(product_id);
+    }
+})
+
+const initApp = () => {
+    fetch('products.json').then(response => response.json()).then(data => {
+        listProducts = data;
+        console.log(listProducts);
+        addToHTML();
+    })
+}
+initApp();
+
+JSON:
+
+[
+    {
+        "id": 1,
+        "name": "Short Feminino 1",
+        "price": 100.00,
+        "image": "source/assets/image/WhatsApp Image 2023-12-13 at 21.34.16.jpeg"
+    },
+    {
+        "id": 2,
+        "name": "Short Feminino 2",
+        "price": 200.00,
+        "image": "source/assets/image/WhatsApp Image 2023-12-13 at 21.34.16.jpeg"
+    },
+    {
+        "id": 3,
+        "name": "Short Feminino 3",
+        "price": 300.00,
+        "image": "source/assets/image/WhatsApp Image 2023-12-13 at 21.34.16.jpeg"
+    },
+    {
+        "id": 4,
+        "name": "Short Feminino 4",
+        "price": 400.00,
+        "image": "source/assets/image/WhatsApp Image 2023-12-13 at 21.34.16.jpeg"
+    },
+    {
+        "id": 5,
+        "name": "Short Feminino 5",
+        "price": 500.00,
+        "image": "source/assets/image/WhatsApp Image 2023-12-13 at 21.34.16.jpeg"
+    },
+    {
+        "id": 6,
+        "name": "Short Feminino 6",
+        "price": 600.00,
+        "image": "source/assets/image/WhatsApp Image 2023-12-13 at 21.34.16.jpeg"
+    }
+]
+
+CSS2 Style2.css:
+
+* {
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Jost", sans-serif;
+}
+::-webkit-scrollbar {
+  width: 0;
+}
+.container-list {
+  width: 980px;
+  max-width: 90vw;
+  margin: auto;
+  text-align: center;
+  padding-top: 10px;
+  transition: transform .5s;
+}
+svg {
+  width: 30px;
+  cursor: pointer;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+header .icon-cart {
+  position: relative;
+}
+header .icon-cart span {
+  display: flex;
+  width: 20px;
+  height: 20px;
+  background: #16e350;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  right: -20px;
+}
+.listProducts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, auto));
+  gap: 2rem;
+}
+.listProducts .product {
+  padding: 8px;
+  width: 320px;
+  height: 440px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.listProducts .product .local-image {
+  width: 100%;
+  height: 240px;
+  border-radius: 12px;
+}
+.listProducts .product .local-image#image-short-1 {
+  background-image: url("source/assets/image/WhatsApp\ Image\ 2023-12-13\ at\ 21.34.16.jpeg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+.listProducts .product .line-height {
+  width: 100%;
+  height: 100px;
+  margin-top: 10px;
+  display: flex;
+}
+.listProducts .product .info-prod {
+  position: relative;
+  width: 70%;
+  height: 100%;
+}
+.listProducts .product .info-prod h1 {
+  position: absolute;
+  left: 0;
+  color: #2c2c2c;
+  font-size: 23px;
+}
+.listProducts .product .info-prod p {
+  position: absolute;
+  left: 0;
+  top: 30px;
+  color: #2c2c2c;
+}
+.listProducts .product .info-prod #quantity {
+  position: absolute;
+  left: 0;
+  top: 50px;
+}
+.listProducts .product .less-more {
+  width: 92px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.listProducts .product .less-more button {
+  width: 90px;
+  height: 100px;
+  margin: 8px;
+  cursor: pointer;
+  border-radius: 8px;
+  border: none;
+  background: #151414;
+  color: #fff;
+}
+.listProducts .product .buy-or-add {
+  position: relative;
+  width: 100%;
+  height: 190px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.listProducts .product .buy-or-add button[type="submit"] {
+  width: 300px;
+  height: 48px;
+  border-radius: 12px;
+  border: none;
+  background: #1a1818;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 8px;
+}
+.cartTab {
+  width: 480px;
+  background: #ffffff;
+  color: #222123;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  inset: 0 -480px 0 auto;
+  display: grid;
+  grid-template-rows: 70px 1fr 70px;
+  transition: .5s;
+}
+body.showCart .cartTab {
+  inset: 0 0 0 auto;
+}
+/* body.showCart .container-list {
+  transform: translateX(-250px);
+} */
+.cartTab h1 {
+  padding: 20px;
+  margin: 0;
+  font-weight: 300;
+  text-transform: capitalize;
+  text-align: center;
+}
+.cartTab .buttonList {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+.cartTab .buttonList button {
+  background: #222123;
+  border: none;
+  text-transform: capitalize;
+  font-weight: 500;
+  cursor: pointer;
+  color: #f9f9f9;
+}
+.cartTab .listCart .item img {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+.cartTab .listCart .item {
+  display: grid;
+  grid-template-columns: 20px 150px 50px 1fr;
+  gap: 50px;
+  text-align: center;
+  align-items: center;
+}
+.listCart .quantityItem span {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  background: #2c2c2c;
+  color: #f1eefd;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.listCart .quantityItem span:nth-child(2) {
+  background: transparent;
+  color: #222123;
+}
+.listCart .item:nth-child(even) {
+  background: #e8e6ec;
+}
+.listCart {
+  overflow: auto;
+}
+body {
+  background-color: #f1eff8;
+}
+
+HTML: index.html2:
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="./style2.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@100;200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/boxicons@latest/css/boxicons.min.css"
+    />
+
+    <title>shopping Cart</title>
+  </head>
+  <body class="">
+    <div class="container-list">
+      <header>
+        <div class="title">Lista de produtos</div>
+        <div class="icon-cart">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="16"
+            width="18"
+            viewBox="0 0 576 512"
+          >
+            <path
+              d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"
+            />
+          </svg>
+          <span>0</span>
+        </div>
+      </header>
+      <div class="listProducts">
+        <!-- <div class="product">
+          <div class="local-image" id="image-short-1"></div>
+          <div class="line-height">
+            <div class="info-prod">
+              <h1>Short Feminino</h1>
+              <p id="productPrice">R$100,00</p>
+              <span id="quantity">Quantidade: 1</span>
+            </div>
+            <div class="less-more">
+              <button id="moreButton">Mais</button>
+              <button id="lessButton">Menos</button>
+            </div>
+          </div>
+          <div class="buy-or-add">
+            <button type="submit" class="addCart">Adicionar ao carrinho</button>
+          </div>
+        </div> -->
+      </div>
+      <div class="cartTab">
+        <h1>Shopping Cart</h1>
+        <div class="listCart">
+          <div class="item">
+            <img src="source/assets/image/WhatsApp Image 2023-12-13 at 21.34.16.jpeg" alt="Image Item not found">
+            <div class="name">
+              Short Feminino
+            </div>
+            <div class="totalPrice">
+              R$100,00
+            </div>
+            <div class="quantityItem">
+              <span class="minus"><i class="fa-solid fa-minus"></i></span>
+              <span>1</span>
+              <span class="plus"><i class="fa-solid fa-plus"></i></span>
+            </div>
+          </div>
+        </div>
+        <div class="buttonList">
+          <button class="close">Close</button>
+          <button class="CheckOut">Check Out</button>
+        </div>
+      </div>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
+
+Js:
+
+let iconCart = document.querySelector(".icon-cart");
+let closeCart = document.querySelector(".close");
+let body = document.querySelector("body");
+let listProductHTML = document.querySelector(".products");
+let listCartHTML = document.querySelector(".listCart");
+let iconCartSpan = document.querySelector(".icon-cart span");
+
+let listProduct = [];
+let carts = [];
+
+iconCart.addEventListener("click", () => {
+  body.classList.toggle("showCart");
+});
+
+closeCart.addEventListener("click", () => {
+  body.classList.toggle("showCart");
+});
+
+const addToHTML = () => {
+  listProductHTML.innerHTML = "";
+  if (listProduct.length > 0) {
+    listProduct.forEach((product) => {
+      let newProduct = document.createElement("div");
+      newProduct.classList.add("item");
+      newProduct.dataset.id = product.id;
+      newProduct.innerHTML = `
+      <div class="products">
+      <div class="row" id="products-container">
+        <div class="header-top">
+          <span class="trending">#Trending</span>
+          <div class="likeit">
+            <label class="container-heart">
+              <input type="checkbox">
+              <svg id="Layer_1" version="1.0" viewBox="0 0 24 24" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M16.4,4C14.6,4,13,4.9,12,6.3C11,4.9,9.4,4,7.6,4C4.5,4,2,6.5,2,9.6C2,14,12,22,12,22s10-8,10-12.4C22,6.5,19.5,4,16.4,4z"></path></svg>
+            </label>
+          </div>
+        </div>
+        <div class="local-image">
+            <img src="${product.image}" alt="Image product not found"
+        </div>
+        <div class="line-height">
+          <div class="info-prod">
+            <h1>${product.name}</h1>
+            <p id="productPrice">Price ${product.price}</p>
+            <span id="quantity">Quantidade: 1</span>
+          </div>
+          <div class="less-more">
+            <button id="moreButton">Mais</button>
+            <button id="lessButton">Menos</button>
+          </div>
+        </div>
+        <div class="buy-or-add">
+          <button type="submit">Comprar Agora</button>
+          <button type="submit" class="addCart">Adicionar ao carrinho</button>
+          <div class="star-ratings">
+            <label class="container">
+              <input type="checkbox">
+              <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
+            </label>
+            <label class="container">
+              <input type="checkbox">
+              <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
+            </label>
+            <label class="container">
+              <input type="checkbox">
+              <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
+            </label>
+            <label class="container">
+              <input type="checkbox">
+              <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
+            </label>
+            <label class="container">
+              <input type="checkbox">
+              <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
+            </label>
+            <a id="removeCard">Remover sugestão</a>
+          </div>
+        </div>
+      </div>
+    </div>`;
+      listProductHTML.appendChild(newProduct);
+    });
+  }
+};
+listProductHTML.addEventListener("click", (event) => {
+  let positionClick = event.target;
+
+  while (positionClick && !positionClick.dataset.id) {
+    positionClick = positionClick.parentElement;
+  }
+
+  if (positionClick && positionClick.dataset.id) {
+    let product_id = positionClick.dataset.id;
+    addToCart(product_id);
+  }
+});
+
+const addToCart = (product_id) => {
+  let positionThisProductInCart = carts.findIndex(
+    (value) => value.product_id == product_id
+  );
+  if (carts.length <= 0) {
+    carts = [
+      {
+        product_id: product_id,
+        quantity: 1,
+      },
+    ];
+  } else if (positionThisProductInCart < 0) {
+    carts.push({
+      product_id: product_id,
+      quantity: 1,
+    });
+  } else {
+    carts[positionThisProductInCart].quantity =
+      carts[positionThisProductInCart].quantity + 1;
+  }
+  addToCartHTML();
+  addCartToMemory();
+};
+
+const addCartToMemory = () => {
+  localStorage.setItem("cart", JSON.stringify(carts));
+};
+
+const addToCartHTML = () => {
+  listCartHTML.innerHTML = "";
+  let totalquantity = 0;
+  if (carts.length > 0) {
+    carts.forEach((cart) => {
+      totalquantity = totalquantity + cart.quantity;
+      let newCart = document.createElement("div");
+      let positionProduct = listProduct.findIndex(
+        (value) => value.id == cart.product_id
+      );
+      let info = listProduct[positionProduct];
+      newCart.classList.add("item");
+      newCart.dataset.id = cart.product_id;
+      newCart.innerHTML = `
+            <div class="item">
+            <img src="${info.image}" alt="Image Item not found">
+            <div class="name">
+                ${info.name}
+            </div>
+            <div class="totalPrice">
+                ${info.price * cart.quantity}
+            </div>
+            <div class="quantityItem">
+              <span class="minus"><i class="fa-solid fa-minus"></i></span>
+              <span>${cart.quantity}</span>
+              <span class="plus"><i class="fa-solid fa-plus"></i></span>
+            </div>
+          </div>
+            `;
+      listCartHTML.appendChild(newCart);
+    });
+  }
+  iconCartSpan.innerHTML = totalquantity;
+};
+listCartHTML.addEventListener("click", (event) => {
+  let positionClick = event.target;
+
+  while (positionClick && !positionClick.dataset.id) {
+    positionClick = positionClick.parentElement;
+  }
+
+  if (positionClick.classList.contains('minus') || positionClick.classList.contains('plus')) {
+    let product_id = positionClick.parentElement.parentElement.dataset.id;
+    let type = 'minus';
+    if (positionClick.classList.contains('plus')) {
+        type = 'plus'
+    }
+    changeQuantity(product_id, type);
+  }
+
+  if (positionClick && positionClick.dataset.id) {
+    let product_id = positionClick.dataset.id;
+    console.log(product_id);
+  }
+});
+const changeQuantity = (product_id, type) => {
+    let positionItemInCart = carts.findIndex((value) => value.product_id == product_id);
+    if (positionItemInCart >= 0) {
+        switch (type) {
+            case 'plus':
+                carts[positionItemInCart].quantity = carts[positionItemInCart].quantity + 1;
+                break;
+                
+            default:
+                let valueChange = carts[positionItemInCart].quantity - 1;
+                if (valueChange > 0) {
+                    carts[positionItemInCart].quantity = valueChange;
+                } else {
+                    carts.splice(positionItemInCart, 1);
+                }
+                break;
+        }
+    }
+    addCartToMemory();
+    addToCartHTML();
+}
+
+const initApp = () => {
+  fetch("products.json")
+    .then((response) => response.json())
+    .then((data) => {
+      listProduct = data;
+      addToHTML();
+
+      if (localStorage.getItem("cart")) {
+        carts = JSON.parse(localStorage.getItem("cart"));
+        addToCartHTML();
+      }
+    });
+};
+initApp();
